@@ -9,7 +9,22 @@ interface GameCardProps {
   sessionId: string
 }
 
+const BADGE_DAYS = 14
+
+function autoBadge(game: Game): 'NUEVO' | null {
+  const daysOld = (Date.now() - new Date(game.created_at).getTime()) / 86_400_000
+  return daysOld <= BADGE_DAYS ? 'NUEVO' : null
+}
+
+const BADGE_STYLES: Record<string, React.CSSProperties> = {
+  NUEVO:       { background: '#C2FF3E', color: '#0a0a10' },
+  POPULAR:     { background: '#FF2D9B', color: '#fff' },
+  ACTUALIZADO: { background: '#00D4FF', color: '#0a0a10' },
+}
+
 export default function GameCard({ game, onPlay, devId, sessionId }: GameCardProps) {
+  const badge = autoBadge(game)
+
   function handlePlay() {
     onPlay(game)
     fetch('/api/events', {
@@ -25,36 +40,112 @@ export default function GameCard({ game, onPlay, devId, sessionId }: GameCardPro
   }
 
   return (
-    <div className="flex flex-col rounded-xl bg-white/5 border border-white/10">
-      <div className="relative w-full overflow-hidden rounded-t-xl" style={{ aspectRatio: '16/9' }}>
+    <article
+      className="flex flex-col transition-transform hover:-translate-y-px"
+      style={{ background: '#111118', borderRadius: '16px' }}
+    >
+      {/* Thumbnail — overflow-hidden sólo aquí, no en el article */}
+      <div
+        className="relative w-full rounded-t-2xl overflow-hidden"
+        style={{ aspectRatio: '16 / 9', containerType: 'inline-size' }}
+      >
         {game.thumbnail_url ? (
-          <img
-            src={game.thumbnail_url}
-            alt={game.title}
-            className="w-full h-full object-cover"
-          />
+          <>
+            <img
+              src={game.thumbnail_url}
+              alt={game.title}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+            <div
+              className="absolute inset-0"
+              style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 55%)' }}
+            />
+          </>
         ) : (
-          <div className="w-full h-full bg-neutral-800 flex items-center justify-center">
-            <span className="text-white/40 text-sm font-medium text-center px-3">{game.title}</span>
-          </div>
+          <div
+            className="absolute inset-0"
+            style={{
+              background: `repeating-linear-gradient(135deg, rgba(255,255,255,0.025) 0 14px, transparent 14px 28px),
+                linear-gradient(180deg, #191923, #21212d)`,
+            }}
+          />
         )}
-      </div>
-      <div className="p-4 flex flex-col gap-2">
-        <h3 className="text-white font-semibold text-base leading-tight">{game.title}</h3>
-        {game.description && (
-          <p className="text-white/50 text-sm leading-snug line-clamp-2">{game.description}</p>
-        )}
-        <div className="pt-3">
-          <button
-            type="button"
-            onClick={handlePlay}
-            onTouchEnd={(e) => { e.preventDefault(); handlePlay(); }}
-            className="w-full py-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white font-semibold text-sm transition-colors touch-manipulation cursor-pointer"
+
+        {/* Título centrado sobre la imagen */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <span
+            className="font-bold text-white text-center px-4 leading-tight"
+            style={{
+              fontSize: 'clamp(16px, 7cqi, 28px)',
+              textShadow: '0 2px 14px rgba(0,0,0,0.75)',
+              fontFamily: 'var(--font-space-grotesk)',
+              letterSpacing: '-0.02em',
+            }}
           >
-            Jugar
-          </button>
+            {game.title}
+          </span>
         </div>
+
+        {/* Badge */}
+        {badge && (
+          <span
+            className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-xs font-bold tracking-wider uppercase"
+            style={{
+              ...BADGE_STYLES[badge],
+              fontFamily: 'var(--font-space-grotesk)',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
+            }}
+          >
+            {badge}
+          </span>
+        )}
       </div>
-    </div>
+
+      {/* Body */}
+      <div className="p-4 flex flex-col gap-3">
+        <div>
+          <h3
+            className="font-bold text-lg leading-tight"
+            style={{
+              color: '#f5f5f7',
+              fontFamily: 'var(--font-space-grotesk)',
+              letterSpacing: '-0.015em',
+            }}
+          >
+            {game.title}
+          </h3>
+          {game.description && (
+            <p
+              className="text-sm mt-1 line-clamp-2"
+              style={{ color: '#8e8e9c', lineHeight: '1.4' }}
+            >
+              {game.description}
+            </p>
+          )}
+        </div>
+
+        <button
+          type="button"
+          onClick={handlePlay}
+          onTouchEnd={(e) => { e.preventDefault(); handlePlay() }}
+          className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-sm hover:brightness-110 active:translate-y-px"
+          style={{
+            background: '#C2FF3E',
+            color: '#0a0a10',
+            fontFamily: 'var(--font-space-grotesk)',
+            touchAction: 'manipulation',
+            cursor: 'pointer',
+            boxShadow: '0 6px 20px -8px rgba(194,255,62,0.55)',
+            letterSpacing: '-0.01em',
+            transition: 'filter 0.12s, transform 0.06s',
+          }}
+        >
+          <svg width="11" height="11" viewBox="0 0 12 12" aria-hidden="true" fill="currentColor">
+            <path d="M3 1.5v9l8-4.5L3 1.5Z" />
+          </svg>
+          Jugar
+        </button>
+      </div>
+    </article>
   )
 }

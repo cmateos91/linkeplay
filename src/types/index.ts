@@ -6,6 +6,7 @@ export type Dev = {
   bio: string | null
   avatar_url: string | null
   discord_invite_url: string | null
+  discord_member_count?: number | null
   social_links: Record<string, string>
   created_at: string
 }
