@@ -32,9 +32,14 @@ export default function ProfileForm({ dev, userId }: ProfileFormProps) {
     const supabase = createClient()
 
     if (isOnboarding) {
-      const cleanUsername = username.trim().toLowerCase().replace(/\s+/g, '')
+      const cleanUsername = username.trim().toLowerCase()
       if (!cleanUsername) {
         setError('El username es obligatorio.')
+        setLoading(false)
+        return
+      }
+      if (!/^[a-z0-9-]+$/.test(cleanUsername)) {
+        setError('El username solo puede contener letras minúsculas, números y guiones.')
         setLoading(false)
         return
       }
@@ -90,7 +95,7 @@ export default function ProfileForm({ dev, userId }: ProfileFormProps) {
             type="text"
             required
             value={username}
-            onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/\s+/g, ''))}
+            onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))}
             placeholder="ej: martagarcia"
             className={inputCls}
           />
