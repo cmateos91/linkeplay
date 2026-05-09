@@ -16,7 +16,9 @@ export default function ProfileClient({ dev, games }: ProfileClientProps) {
   const [activeGame, setActiveGame] = useState<Game | null>(null)
 
   useEffect(() => {
-    const id = crypto.randomUUID()
+    const id = typeof crypto.randomUUID === 'function'
+      ? crypto.randomUUID()
+      : `${Math.random().toString(36).slice(2)}-${Date.now().toString(36)}`
     setSessionId(id)
 
     fetch('/api/events', {
@@ -57,7 +59,7 @@ export default function ProfileClient({ dev, games }: ProfileClientProps) {
         </div>
 
         {/* Discord */}
-        {dev.discord_invite_url && sessionId && (
+        {dev.discord_invite_url && (
           <DiscordButton
             discordUrl={dev.discord_invite_url}
             devId={dev.id}

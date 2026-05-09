@@ -17,7 +17,7 @@ export default async function ProfilePage({ params }: PageProps) {
     .eq('username', username)
     .single<Dev>()
 
-  if (!dev) notFound()
+if (!dev) notFound()
 
   const { data: games } = await supabase
     .from('games')
