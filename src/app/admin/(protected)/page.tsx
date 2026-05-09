@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import type { Dev } from '@/types'
+import NotifyButton from '@/components/admin/NotifyButton'
 
 export default async function AdminDashboard() {
   const supabase = await createClient()
@@ -80,13 +81,15 @@ export default async function AdminDashboard() {
     { label: 'Visitas (7 días)', value: pageViews ?? 0 },
     { label: 'Partidas iniciadas', value: gameStarts },
     { label: 'Clicks en Discord', value: discordClicks ?? 0 },
-    { label: 'Seguidores de email', value: followerCount ?? 0 },
     { label: 'Juego más jugado', value: topGameTitle ?? '—' },
   ]
 
+  const followers = followerCount ?? 0
+
   return (
-    <div>
-      <h1 className="text-xl font-bold text-white mb-6">Dashboard</h1>
+    <div className="flex flex-col gap-6">
+      <h1 className="text-xl font-bold text-white">Dashboard</h1>
+
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map(({ label, value }) => (
           <div
@@ -99,6 +102,19 @@ export default async function AdminDashboard() {
             <span className="text-white text-3xl font-bold leading-none">{value}</span>
           </div>
         ))}
+      </div>
+
+      {/* Card de seguidores con botón de notificación */}
+      <div className="bg-white/5 border border-white/10 rounded-xl p-5 flex flex-col gap-3 max-w-sm">
+        <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-1">
+            <span className="text-white/40 text-xs font-medium uppercase tracking-wide">
+              Seguidores de email
+            </span>
+            <span className="text-white text-3xl font-bold leading-none">{followers}</span>
+          </div>
+          <NotifyButton devId={dev.id} followerCount={followers} />
+        </div>
       </div>
     </div>
   )
