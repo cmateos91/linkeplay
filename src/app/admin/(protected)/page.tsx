@@ -32,6 +32,7 @@ export default async function AdminDashboard() {
     { count: pageViews },
     { count: discordClicks },
     { data: gameStartEvents },
+    { count: followerCount },
   ] = await Promise.all([
     supabase
       .from('events')
@@ -52,6 +53,10 @@ export default async function AdminDashboard() {
       .eq('event_type', 'game_start')
       .gte('created_at', sevenDaysAgo)
       .not('game_id', 'is', null),
+    supabase
+      .from('followers')
+      .select('*', { count: 'exact', head: true })
+      .eq('dev_id', dev.id),
   ])
 
   const gameStarts = gameStartEvents?.length ?? 0
@@ -75,6 +80,7 @@ export default async function AdminDashboard() {
     { label: 'Visitas (7 días)', value: pageViews ?? 0 },
     { label: 'Partidas iniciadas', value: gameStarts },
     { label: 'Clicks en Discord', value: discordClicks ?? 0 },
+    { label: 'Seguidores de email', value: followerCount ?? 0 },
     { label: 'Juego más jugado', value: topGameTitle ?? '—' },
   ]
 
