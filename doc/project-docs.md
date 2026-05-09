@@ -228,17 +228,17 @@ CREATE TABLE events (
 **Objetivo:** Marta puede crear su perfil, subir sus juegos, y un jugador puede llegar y jugar.
 
 **Semana 1:**
-- [ ] Página de perfil pública (`/[username]`) con grid de juegos
-- [ ] Modal de juego con iframe fullscreen
-- [ ] Botón de Discord funcional con tracking de clic
-- [ ] Tracking de page_view y game_start
+- [x] Página de perfil pública (`/[username]`) con grid de juegos
+- [x] Modal de juego con iframe fullscreen
+- [x] Botón de Discord funcional con tracking de clic
+- [x] Tracking de page_view y game_start
 
 **Semana 2:**
-- [ ] Panel de admin (`/admin`) protegido con Supabase Auth
-- [ ] CRUD de perfil (editar nombre, bio, avatar, link Discord)
-- [ ] CRUD de juegos (añadir, editar, reordenar, publicar/despublicar)
-- [ ] Dashboard básico de stats (visitas / plays / discord clicks últimos 7 días)
-- [ ] Optimización mobile: prueba en iPhone y Android real
+- [x] Panel de admin (`/admin`) protegido con Supabase Auth
+- [x] CRUD de perfil (editar nombre, bio, avatar, link Discord)
+- [x] CRUD de juegos (añadir, editar, reordenar, publicar/despublicar)
+- [x] Dashboard básico de stats (visitas / plays / discord clicks últimos 7 días)
+- [x] Optimización mobile: prueba en iPhone y Android real
 
 **Criterio de salida:** Marta puede hacer el setup completa y autónomamente, sin ayuda del fundador.
 
@@ -247,8 +247,8 @@ CREATE TABLE events (
 ### Fase 2 — Beta Real (Semanas 3-4)
 **Objetivo:** Marta mete tráfico TikTok real. Observamos, medimos, corregimos.
 
-- [ ] Marta configura su perfil con sus juegos reales
-- [ ] Marta sube contenido en TikTok con el link
+- [x] Marta configura su perfil con sus juegos reales
+- [x] Marta sube contenido en TikTok con el link
 - [ ] Seguimiento diario de métricas de las métricas de éxito del MVP
 - [ ] Lista de bugs y friction points reportados por Marta
 - [ ] Fixes basados en datos reales (no suposiciones)
@@ -385,3 +385,16 @@ Elegir nombre antes de Fase 1. Afecta al dominio y al branding del perfil de Mar
 ---
 
 *Documento vivo. Actualizar con cada decisión importante o cambio de dirección.*
+
+---
+
+## Changelog
+
+### 2026-05-09
+
+- Rediseño visual gaming (lime #C2FF3E, dark theme, Space Grotesk)
+- Badges en game cards (nuevo/popular/actualizado)
+- Sistema de follow por email con Resend
+- FollowButton con 5 estados de UI
+- Admin dashboard con contador de seguidores
+- Deploy en producción: linkeplay.gg
